@@ -51,6 +51,7 @@ app.post("/account/login", async (request, response) => {
 
 // TODO: remove after dev
 function getTerritories() {
+  return { data: [] };
   return {
     data: [
       { id: "1", name: "Metro Manila", parent: null },
