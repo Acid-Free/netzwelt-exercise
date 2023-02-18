@@ -12,6 +12,49 @@
   <div id="territories-data" data-object="<%= JSON.stringify(territories) %>"></div>
   <script>
     const territoriesData = JSON.parse(document.querySelector("#territories-data").getAttribute("data-object"))
+
+    // Returns an object of ids with tree-like structure
+    function createObjectTree() {
+      // tree key => id; [] => list of child ids
+      const tree = {
+        null: []
+      };
+      for (const element of territoriesData) {
+        const parentIndex = territoriesData.findIndex(
+          ({
+            id
+          }) => id === element.parent
+        );
+        // with the assumptions in mind, the only time where parent is missing from the territoriesData is when parent is null
+        const parentId = territoriesData[parentIndex]?.id ?? "null";
+        const parentChildrenList = getParent(tree, parentId);
+
+        const currentObject = {
+          [element.id]: []
+        };
+        // if Assumption 1, parentChildren will never be null (provided tree has the null key initially)
+        parentChildrenList.push(currentObject);
+      }
+
+      return tree;
+    }
+
+    // returns the parent object value if present; null otherwise
+    function getParent(object, id) {
+      for (const key in object) {
+        if (key === id) {
+          return object[key];
+        }
+        // if list is not empty, navigate through it as well
+        if (Array.isArray(object[key]) && object[key].length > 0)
+          for (const childObject of object[key]) {
+            // store the result, if not found, try other elements
+            const result = getParent(childObject, id);
+            if (result) return result;
+          }
+      }
+      // console.log(id);
+    }
   </script>
 </body>
 
