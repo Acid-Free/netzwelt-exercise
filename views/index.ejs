@@ -11,7 +11,14 @@
 <body>
   <div id="territories-data" data-object="<%= JSON.stringify(territories) %>"></div>
   <script>
-    const territoriesData = JSON.parse(document.querySelector("#territories-data").getAttribute("data-object"))
+    // Assumption 1: sorted (not necessary though)
+    // Assumption 2: every entry should be placed in the list
+    // Assumption 3: every entry has a parent in the list(except null)
+    const territoriesData = JSON.parse(document.querySelector("#territories-data").getAttribute("data-object"));
+    const territoryTree = document.createElement("div");
+    const tree = createObjectTree();
+
+    populateElementTree(territoryTree, tree);
 
     // Returns an object of ids with tree-like structure
     function createObjectTree() {
@@ -20,11 +27,7 @@
         null: []
       };
       for (const element of territoriesData) {
-        const parentIndex = territoriesData.findIndex(
-          ({
-            id
-          }) => id === element.parent
-        );
+        const parentIndex = territoriesData.findIndex(({id}) => id === element.parent);
         // with the assumptions in mind, the only time where parent is missing from the territoriesData is when parent is null
         const parentId = territoriesData[parentIndex]?.id ?? "null";
         const parentChildrenList = getParent(tree, parentId);
@@ -32,7 +35,7 @@
         const currentObject = {
           [element.id]: []
         };
-        // if Assumption 1, parentChildren will never be null (provided tree has the null key initially)
+        // If Assumption 1, parentChildren will never be null (provided tree has the null key initially)
         parentChildrenList.push(currentObject);
       }
 
@@ -45,16 +48,56 @@
         if (key === id) {
           return object[key];
         }
-        // if list is not empty, navigate through it as well
+        // If list is not empty, navigate through it as well
         if (Array.isArray(object[key]) && object[key].length > 0)
           for (const childObject of object[key]) {
-            // store the result, if not found, try other elements
+            // Store the result, if not found, try other elements
             const result = getParent(childObject, id);
             if (result) return result;
           }
       }
-      // console.log(id);
     }
+
+    // Assumption 1: objectTree is not empty
+    function populateElementTree(elementTree, objectTree) {
+      // Assumption 2: There is only one object entry
+      const [id, children] = Object.entries(objectTree)[0];
+      const name = getIdName(id);
+
+      // ul surrounds potential children
+      const ul = document.createElement("ul");
+
+      // Create li for surrounding potential span and ul
+      const li = document.createElement("li");
+
+      // Create span showing the title if there is at least one child
+      if (children.length > 0) {
+        const spanTitle = document.createElement("span");
+        spanTitle.textContent = name;
+        li.append(spanTitle);
+      }
+
+      // Only add a text content if the current element doesn't have a child
+      else {
+        li.textContent = name;
+      }
+
+      ul.append(li);
+      elementTree.append(ul);
+
+      // Iterate over the object children recursively
+      for (const child of children) {
+        populateElementTree(li, child);
+      }
+    }
+
+    function getIdName(territoryId) {
+      if (territoryId === "null") return "Philippines";
+      output = territoriesData.find(({id}) => id === territoryId);
+      return output.name;
+    }
+
+    document.body.append(territoryTree);
   </script>
 </body>
 
