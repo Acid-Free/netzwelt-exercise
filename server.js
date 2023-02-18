@@ -34,7 +34,7 @@ app.get("/home/index", checkAuthenticated, async (request, response) => {
   response.render("index.ejs", { territories: data });
 });
 
-app.get("/account/login", (request, response) => {
+app.get("/account/login", checkNotAuthenticated, (request, response) => {
   const message = request.flash("flash-message");
   response.render("login.ejs", { message });
 });
@@ -51,7 +51,7 @@ app.post("/account/login", async (request, response) => {
 
 // TODO: remove after dev
 function getTerritories() {
-  return { data: [] };
+  // return { data: [] };
   return {
     data: [
       { id: "1", name: "Metro Manila", parent: null },
@@ -123,12 +123,21 @@ function verifyAccount(username, password) {
 //   return JSON.stringify(validKeys) === JSON.stringify(dataKeys);
 // }
 
-// checks if a user is logged in
+// Checks if a user is logged in
 function checkAuthenticated(request, response, next) {
   if (loggedIn) {
     return next();
   } else {
     return response.redirect("/account/login");
+  }
+}
+
+// Checks if a user is not logged in
+function checkNotAuthenticated(request, response, next) {
+  if (!loggedIn) {
+    return next();
+  } else {
+    return response.redirect("/home/index");
   }
 }
 
