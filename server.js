@@ -91,13 +91,35 @@ function getDummyTerritories() {
 
 // returns an object of territories
 async function getTerritories() {
-  const response = await fetch(
-    "https://netzwelt-devtest.azurewebsites.net/Territories/All"
-  );
+  // To be returned if API request is invalid
+  // This is important, other parts of this app rely on the object with this structure.
+  const emptyTerritoriesObject = { data: [] };
 
-  const territoriesObject = await response.json();
+  let response;
+  try {
+    response = await fetch(
+      "https://netzwelt-devtest.azurewebsites.net/Territories/All"
+    );
+  } catch (error) {
+    console.error(error);
+    return emptyTerritoriesObject;
+  }
 
-  return territoriesObject;
+  if (!response.ok) {
+    return emptyTerritoriesObject;
+  } else {
+    let territoriesObject;
+
+    // It's possible for the API to give incorrect format, so surround this too.
+    try {
+      territoriesObject = await response.json();
+    } catch (error) {
+      console.error(error);
+      return emptyTerritoriesObject;
+    }
+
+    return territoriesObject;
+  }
 }
 
 // dev function serving same functionality as verifyAccount
