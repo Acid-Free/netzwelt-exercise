@@ -29,9 +29,9 @@ app.get("/", (request, response) => {
 });
 
 app.get("/home/index", checkAuthenticated, async (request, response) => {
-  // let { data } = await getTerritories();
+  let { data } = await getTerritories();
   // TODO: replace after dev
-  let { data } = getDummyTerritories();
+  // let { data } = getDummyTerritories();
   response.render("index.ejs", { territories: data });
 });
 
@@ -110,18 +110,24 @@ async function verifyAccount(request) {
   const username = request.body.username;
   const password = request.body.password;
 
-  // success: {"username":"foo","displayName":"Foo Bar Foo","roles":["basic-user"]}
-  // failure: {"message":"Invalid username or password."}
-  const validKeys = ["username", "displayName", "roles"];
-
-  const response = await fetch(
-    "https://netzwelt-devtest.azurewebsites.net/Account/SignIn",
-    {
-      method: "post",
-      body: JSON.stringify({ username: username, password: password }),
-      headers: { "Content-Type": "application/json" },
-    }
-  );
+  let response;
+  try {
+    response = await fetch(
+      "https://netzwelt-devtest.azurewebsites.net/Account/SignIn",
+      {
+        method: "post",
+        body: JSON.stringify({ username: username, password: password }),
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    request.flash(
+      "login-message",
+      "Server error occurred. Please contact the administrator."
+    );
+    return;
+  }
 
   // Asssumption 1: Any 200 message is valid, everything else invalid
   if (!response.ok) {
