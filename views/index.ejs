@@ -117,10 +117,10 @@
 
       // ul surrounds potential children
       const ul = document.createElement("ul");
+      if (++depth > 0) ul.classList.add("nested");
 
       // Create li for surrounding potential span and ul
       const li = document.createElement("li");
-      if (++depth > 0) li.classList.add("nested");
 
       // Create span showing the title if there is at least one child
       if (children.length > 0) {
@@ -154,13 +154,13 @@
     // Initialize dom element visualization
     function initializeElements() {
       let toggler = [...document.querySelectorAll(".caret")];
-      console.log(toggler);
       toggler.forEach((element) =>
         element.addEventListener("click", (e) => {
-          console.log(e);
-          [...e.target.parentElement.querySelectorAll(".nested")].forEach(
+          // using :scope > .nested ensures only the direct children get activated
+          [...e.target.parentElement.querySelectorAll(":scope > .nested")].forEach(
             (element) => element.classList.toggle("active")
           );
+          e.target.classList.toggle("caret-down");
         })
       );
     }
