@@ -9,13 +9,19 @@
 </head>
 
 <body>
+  <h2>Territories</h2>
+  <p>Here are the list of territories</p>
   <div id="territories-data" data-object="<%= JSON.stringify(territories) %>"></div>
   <script>
     // Assumption 1: sorted (not necessary though)
     // Assumption 2: every entry should be placed in the list
     // Assumption 3: every entry has a parent in the list(except null)
+
+    // Data send by backend 
     const territoriesData = JSON.parse(document.querySelector("#territories-data").getAttribute("data-object"));
+    // DOM element containing the territory tree to be appended to body
     const territoryTree = document.createElement("div");
+    // object containing ids in a tree structure
     const tree = createObjectTree();
 
     populateElementTree(territoryTree, tree);
@@ -28,7 +34,7 @@
       };
       for (const element of territoriesData) {
         const parentIndex = territoriesData.findIndex(({id}) => id === element.parent);
-        // with the assumptions in mind, the only time where parent is missing from the territoriesData is when parent is null
+        // With the assumptions in mind, the only time where parent is missing from the territoriesData is when parent is null
         const parentId = territoriesData[parentIndex]?.id ?? "null";
         const parentChildrenList = getParent(tree, parentId);
 
@@ -42,7 +48,7 @@
       return tree;
     }
 
-    // returns the parent object value if present; null otherwise
+    // Returns the parent object value if present; null otherwise
     function getParent(object, id) {
       for (const key in object) {
         if (key === id) {
@@ -91,6 +97,7 @@
       }
     }
 
+    // Returns a valid name from territory id
     function getIdName(territoryId) {
       if (territoryId === "null") return "Philippines";
       output = territoriesData.find(({id}) => id === territoryId);
