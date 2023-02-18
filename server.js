@@ -28,7 +28,7 @@ app.get("/", (request, response) => {
   response.redirect("/home/index");
 });
 
-app.get("/home/index", (request, response) => {
+app.get("/home/index", checkAuthenticated, (request, response) => {
   response.render("index.ejs");
 });
 
@@ -67,6 +67,15 @@ async function verifyAccount(username, password) {
 
   // parse the arrays into strings; if they are strictly equal, the data satisfies the structure of a valid account
   return JSON.stringify(validKeys) === JSON.stringify(dataKeys);
+}
+
+// checks if a user is logged in
+function checkAuthenticated(request, response, next) {
+  if (loggedIn) {
+    return next();
+  } else {
+    return response.redirect("/account/login");
+  }
 }
 
 app.listen(port, () => {
