@@ -1,0 +1,28 @@
+{
+  "name": "netzwelt-exercise",
+  "version": "1.0.0",
+  "description": "Practical exercise to be presented during Netzwelt technical evaluation for Junior Web Programmer role.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Acid-Free/netzwelt-exercise.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Acid-Free/netzwelt-exercise/issues"
+  },
+  "homepage": "https://github.com/Acid-Free/netzwelt-exercise#readme",
+  "dependencies": {
+    "ejs": "^3.1.8",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.20"
+  }
+}
