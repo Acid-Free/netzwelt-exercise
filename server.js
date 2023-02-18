@@ -29,7 +29,6 @@ app.get("/", (request, response) => {
 });
 
 app.get("/home/index", checkAuthenticated, async (request, response) => {
-  // TODO: add error handling
   // let { data } = await getTerritories();
   // TODO: replace after dev
   let { data } = getDummyTerritories();
@@ -37,18 +36,18 @@ app.get("/home/index", checkAuthenticated, async (request, response) => {
 });
 
 app.get("/account/login", checkNotAuthenticated, (request, response) => {
-  const message = request.flash("flash-message");
+  const message = request.flash("login-message");
   response.render("login.ejs", { message });
 });
 
 app.post("/account/login", async (request, response) => {
-  // loggedIn = await verifyAccount(request.body.username, request.body.password);
+  loggedIn = await verifyAccount(request);
   // TODO: replace after dev
-  loggedIn = verifyDummyAccount(request.body.username, request.body.password);
+  // loggedIn = verifyDummyAccount(request);
+
   if (loggedIn) {
     response.redirect("/home/index");
   } else {
-    request.flash("flash-message", "Invalid username or password");
     response.redirect("/account/login");
   }
 });
@@ -102,12 +101,15 @@ async function getTerritories() {
 }
 
 // dev function serving same functionality as verifyAccount
-function verifyDummyAccount(username, password) {
+function verifyDummyAccount(request) {
   return true;
 }
 
 // returns true if account credentials are valid; false otherwise
-async function verifyAccount(username, password) {
+async function verifyAccount(request) {
+  const username = request.body.username;
+  const password = request.body.password;
+
   // success: {"username":"foo","displayName":"Foo Bar Foo","roles":["basic-user"]}
   // failure: {"message":"Invalid username or password."}
   const validKeys = ["username", "displayName", "roles"];
@@ -121,11 +123,15 @@ async function verifyAccount(username, password) {
     }
   );
 
-  const data = await response.json();
-  const dataKeys = Object.keys(data);
-
-  // parse the arrays into strings; if they are strictly equal, the data satisfies the structure of a valid account
-  return JSON.stringify(validKeys) === JSON.stringify(dataKeys);
+  // Asssumption 1: Any 200 message is valid, everything else invalid
+  if (!response.ok) {
+    console.error("Error:", response.status, response.statusText);
+    request.flash("login-message", "Invalid username or password.");
+    return false;
+  } else {
+    request.flash("login-message", "Account is verified.");
+    return true;
+  }
 }
 
 // Checks if a user is logged in
