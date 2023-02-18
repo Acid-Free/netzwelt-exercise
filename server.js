@@ -30,7 +30,9 @@ app.get("/", (request, response) => {
 
 app.get("/home/index", checkAuthenticated, async (request, response) => {
   // TODO: add error handling
-  let { data } = await getTerritories();
+  // let { data } = await getTerritories();
+  // TODO: replace after dev
+  let { data } = getDummyTerritories();
   response.render("index.ejs", { territories: data });
 });
 
@@ -40,7 +42,9 @@ app.get("/account/login", checkNotAuthenticated, (request, response) => {
 });
 
 app.post("/account/login", async (request, response) => {
-  loggedIn = await verifyAccount(request.body.username, request.body.password);
+  // loggedIn = await verifyAccount(request.body.username, request.body.password);
+  // TODO: replace after dev
+  loggedIn = verifyDummyAccount(request.body.username, request.body.password);
   if (loggedIn) {
     response.redirect("/home/index");
   } else {
@@ -49,8 +53,8 @@ app.post("/account/login", async (request, response) => {
   }
 });
 
-// TODO: remove after dev
-function getTerritories() {
+// dev function serving the same function as getTerritories
+function getDummyTerritories() {
   // return { data: [] };
   return {
     data: [
@@ -86,42 +90,43 @@ function getTerritories() {
   };
 }
 
-// async function getTerritories() {
-//   const response = await fetch(
-//     "https://netzwelt-devtest.azurewebsites.net/Territories/All"
-//   );
+// returns an object of territories
+async function getTerritories() {
+  const response = await fetch(
+    "https://netzwelt-devtest.azurewebsites.net/Territories/All"
+  );
 
-//   const territoriesObject = await response.json();
+  const territoriesObject = await response.json();
 
-//   return territoriesObject;
-// }
+  return territoriesObject;
+}
 
-// TODO: remove after dev
-function verifyAccount(username, password) {
+// dev function serving same functionality as verifyAccount
+function verifyDummyAccount(username, password) {
   return true;
 }
 
 // returns true if account credentials are valid; false otherwise
-// async function verifyAccount(username, password) {
-//   // success: {"username":"foo","displayName":"Foo Bar Foo","roles":["basic-user"]}
-//   // failure: {"message":"Invalid username or password."}
-//   const validKeys = ["username", "displayName", "roles"];
+async function verifyAccount(username, password) {
+  // success: {"username":"foo","displayName":"Foo Bar Foo","roles":["basic-user"]}
+  // failure: {"message":"Invalid username or password."}
+  const validKeys = ["username", "displayName", "roles"];
 
-//   const response = await fetch(
-//     "https://netzwelt-devtest.azurewebsites.net/Account/SignIn",
-//     {
-//       method: "post",
-//       body: JSON.stringify({ username: username, password: password }),
-//       headers: { "Content-Type": "application/json" },
-//     }
-//   );
+  const response = await fetch(
+    "https://netzwelt-devtest.azurewebsites.net/Account/SignIn",
+    {
+      method: "post",
+      body: JSON.stringify({ username: username, password: password }),
+      headers: { "Content-Type": "application/json" },
+    }
+  );
 
-//   const data = await response.json();
-//   const dataKeys = Object.keys(data);
+  const data = await response.json();
+  const dataKeys = Object.keys(data);
 
-//   // parse the arrays into strings; if they are strictly equal, the data satisfies the structure of a valid account
-//   return JSON.stringify(validKeys) === JSON.stringify(dataKeys);
-// }
+  // parse the arrays into strings; if they are strictly equal, the data satisfies the structure of a valid account
+  return JSON.stringify(validKeys) === JSON.stringify(dataKeys);
+}
 
 // Checks if a user is logged in
 function checkAuthenticated(request, response, next) {
