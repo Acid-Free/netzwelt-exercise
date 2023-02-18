@@ -59,32 +59,27 @@ async function getTerritories() {
   return territoriesObject;
 }
 
-// TODO: REMOVE before submitting
-async function verifyAccount(username, password) {
-  return true;
-}
-
 // returns true if account credentials are valid; false otherwise
-// async function verifyAccount(username, password) {
-//   // success: {"username":"foo","displayName":"Foo Bar Foo","roles":["basic-user"]}
-//   // failure: {"message":"Invalid username or password."}
-//   const validKeys = ["username", "displayName", "roles"];
+async function verifyAccount(username, password) {
+  // success: {"username":"foo","displayName":"Foo Bar Foo","roles":["basic-user"]}
+  // failure: {"message":"Invalid username or password."}
+  const validKeys = ["username", "displayName", "roles"];
 
-//   const response = await fetch(
-//     "https://netzwelt-devtest.azurewebsites.net/Account/SignIn",
-//     {
-//       method: "post",
-//       body: JSON.stringify({ username: username, password: password }),
-//       headers: { "Content-Type": "application/json" },
-//     }
-//   );
-//
-//   const data = await response.json();
-//   const dataKeys = Object.keys(data);
+  const response = await fetch(
+    "https://netzwelt-devtest.azurewebsites.net/Account/SignIn",
+    {
+      method: "post",
+      body: JSON.stringify({ username: username, password: password }),
+      headers: { "Content-Type": "application/json" },
+    }
+  );
 
-//   // parse the arrays into strings; if they are strictly equal, the data satisfies the structure of a valid account
-//   return JSON.stringify(validKeys) === JSON.stringify(dataKeys);
-// }
+  const data = await response.json();
+  const dataKeys = Object.keys(data);
+
+  // parse the arrays into strings; if they are strictly equal, the data satisfies the structure of a valid account
+  return JSON.stringify(validKeys) === JSON.stringify(dataKeys);
+}
 
 // checks if a user is logged in
 function checkAuthenticated(request, response, next) {
