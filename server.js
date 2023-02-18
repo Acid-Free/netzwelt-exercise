@@ -1,4 +1,10 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
+const flash = require("express-flash");
+const session = require("express-session");
 const app = express();
 const port = 5500;
 
@@ -8,6 +14,15 @@ app.set("view-engine", "ejs");
 
 // allows parsing of urlencoded payloads
 app.use(express.urlencoded({ extended: false }));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 },
+  })
+);
+app.use(flash());
 
 app.get("/", (request, response) => {
   response.redirect("/home/index");
@@ -18,14 +33,16 @@ app.get("/home/index", (request, response) => {
 });
 
 app.get("/account/login", (request, response) => {
-  response.render("login.ejs");
+  const message = request.flash("flash-message");
+  response.render("login.ejs", { message });
 });
 
 app.post("/account/login", async (request, response) => {
   loggedIn = await verifyAccount(request.body.username, request.body.password);
   if (loggedIn) {
-    response.send("valid");
+    response.redirect("/home/index");
   } else {
+    request.flash("flash-message", "Invalid username or password");
     response.send("invalid");
   }
 });
