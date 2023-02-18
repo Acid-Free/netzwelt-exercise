@@ -43,7 +43,7 @@ app.post("/account/login", async (request, response) => {
     response.redirect("/home/index");
   } else {
     request.flash("flash-message", "Invalid username or password");
-    response.send("invalid");
+    response.redirect("/account/login");
   }
 });
 
