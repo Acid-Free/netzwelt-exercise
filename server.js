@@ -28,8 +28,10 @@ app.get("/", (request, response) => {
   response.redirect("/home/index");
 });
 
-app.get("/home/index", checkAuthenticated, (request, response) => {
-  response.render("index.ejs");
+app.get("/home/index", checkAuthenticated, async (request, response) => {
+  // TODO: add error handling
+  let { data } = await getTerritories();
+  response.render("index.ejs", { territories: data });
 });
 
 app.get("/account/login", (request, response) => {
@@ -47,27 +49,42 @@ app.post("/account/login", async (request, response) => {
   }
 });
 
-// returns true if account credentials are valid; false otherwise
-async function verifyAccount(username, password) {
-  // success: {"username":"foo","displayName":"Foo Bar Foo","roles":["basic-user"]}
-  // failure: {"message":"Invalid username or password."}
-  const validKeys = ["username", "displayName", "roles"];
-
+async function getTerritories() {
   const response = await fetch(
-    "https://netzwelt-devtest.azurewebsites.net/Account/SignIn",
-    {
-      method: "post",
-      body: JSON.stringify({ username: username, password: password }),
-      headers: { "Content-Type": "application/json" },
-    }
+    "https://netzwelt-devtest.azurewebsites.net/Territories/All"
   );
 
-  const data = await response.json();
-  const dataKeys = Object.keys(data);
+  const territoriesObject = await response.json();
 
-  // parse the arrays into strings; if they are strictly equal, the data satisfies the structure of a valid account
-  return JSON.stringify(validKeys) === JSON.stringify(dataKeys);
+  return territoriesObject;
 }
+
+// TODO: REMOVE before submitting
+async function verifyAccount(username, password) {
+  return true;
+}
+
+// returns true if account credentials are valid; false otherwise
+// async function verifyAccount(username, password) {
+//   // success: {"username":"foo","displayName":"Foo Bar Foo","roles":["basic-user"]}
+//   // failure: {"message":"Invalid username or password."}
+//   const validKeys = ["username", "displayName", "roles"];
+
+//   const response = await fetch(
+//     "https://netzwelt-devtest.azurewebsites.net/Account/SignIn",
+//     {
+//       method: "post",
+//       body: JSON.stringify({ username: username, password: password }),
+//       headers: { "Content-Type": "application/json" },
+//     }
+//   );
+//
+//   const data = await response.json();
+//   const dataKeys = Object.keys(data);
+
+//   // parse the arrays into strings; if they are strictly equal, the data satisfies the structure of a valid account
+//   return JSON.stringify(validKeys) === JSON.stringify(dataKeys);
+// }
 
 // checks if a user is logged in
 function checkAuthenticated(request, response, next) {
