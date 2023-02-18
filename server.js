@@ -16,6 +16,11 @@ app.get("/account/login", (request, response) => {
   response.render("login.ejs");
 });
 
+app.post("/account/login", (request, response) => {
+  const output = request.body.username;
+  response.send(output);
+});
+
 app.listen(port, () => {
   console.log("Listening...");
 });
