@@ -4,7 +4,7 @@
   "description": "Practical exercise to be presented during Netzwelt technical evaluation for Junior Web Programmer role.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev-start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
