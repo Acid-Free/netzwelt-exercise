@@ -7,6 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home Page</title>
   <style>
+    body {
+      margin: 30px;
+    }
+
+    #root-ul,
+    .visible-ul {
+      padding: 0;
+    }
+
     ul {
       margin: 0;
       padding-left: 20px;
@@ -54,9 +63,9 @@
 <body>
   <h2>Territories</h2>
   <% if (territories.length === 0) { %>
-  <p>Here is the list of territories</p>
-  <% } else { %>
   <p>There are no territories</p>
+  <% } else { %>
+  <p>Here is the list of territories</p>
   <%  } %>
   <div id="territories-data" data-object="<%= JSON.stringify(territories) %>"></div>
   <script>
@@ -115,25 +124,29 @@
 
     // Assumption 1: objectTree is not empty
     function populateElementTree(elementTree, objectTree) {
+      ++depth;
       // Assumption 2: There is only one object entry
       const [id, children] = Object.entries(objectTree)[0];
       const name = getIdName(id);
 
       // ul surrounds potential children
       const ul = document.createElement("ul");
-      if (++depth > 0) ul.classList.add("nested");
+      // if (depth > 1) ul.classList.add("nested");
 
       // Create li for surrounding potential span and ul
       const li = document.createElement("li");
 
+      // Don't name root element, but assign its ul an id
+      if (depth === 0) {
+        ul.setAttribute("id", "root-ul");
+      }
       // Create span showing the title if there is at least one child
-      if (children.length > 0) {
+      else if (children.length > 0) {
         const spanTitle = document.createElement("span");
         spanTitle.textContent = name;
         spanTitle.classList.add("caret");
         li.append(spanTitle);
       }
-
       // Only add a text content if the current element doesn't have a child
       else {
         li.textContent = name;
@@ -157,18 +170,29 @@
 
     // Initialize dom element visualization
     function initializeElements() {
-      let toggler = [...document.querySelectorAll(".caret")];
+      // Initialize togglers (span with caret class)
+      const toggler = [...document.querySelectorAll(".caret")];
       toggler.forEach((element) =>
         element.addEventListener("click", (e) => {
           // using :scope > .nested ensures only the direct children get activated
-          [...e.target.parentElement.querySelectorAll(":scope > .nested")].forEach(
+          [...e.target.parentElement.querySelectorAll(":scope > ul")].forEach(
             (element) => element.classList.toggle("active")
           );
           e.target.classList.toggle("caret-down");
         })
       );
+
+      // Initialize every ul
+      // Select the closest uls from root, make them always visible
+      const rootDirectChildrenUls = [...document.querySelectorAll("#root-ul > li > ul")];
+      rootDirectChildrenUls.forEach((element) => element.classList.add("visible-ul"));
+
+      // Select every child ul that is supposed to be hidden by default
+      const childUls = [...document.querySelectorAll("ul:not(#root-ul, .visible-ul)")];
+      childUls.forEach((element) => element.classList.add("nested"));
     }
 
+    // This order is important, make sure to finalize the territoryTree before initializing the elements
     document.body.append(territoryTree);
 
     initializeElements();
