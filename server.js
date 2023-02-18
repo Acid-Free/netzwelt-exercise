@@ -2,7 +2,12 @@ const express = require("express");
 const app = express();
 const port = 5500;
 
+let username;
+let password;
+
 app.set("view-engine", "ejs");
+
+app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (request, response) => {
   response.redirect("/home/index");
@@ -17,8 +22,8 @@ app.get("/account/login", (request, response) => {
 });
 
 app.post("/account/login", (request, response) => {
-  const output = request.body.username;
-  response.send(output);
+  username = request.body.username;
+  password = request.body.password;
 });
 
 app.listen(port, () => {
