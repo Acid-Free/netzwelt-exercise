@@ -82,6 +82,11 @@ app.post("/account/login", async (request, response) => {
   }
 });
 
+app.post("/account/logout", (request, response) => {
+  response.clearCookie("userToken");
+  return response.redirect("/account/login");
+});
+
 // Setup server to listen for connections using specified port
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
