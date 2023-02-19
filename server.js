@@ -5,6 +5,9 @@ if (process.env.NODE_ENV !== "production") {
 const express = require("express");
 const flash = require("express-flash");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+
 const app = express();
 const port = 5500;
 
@@ -12,7 +15,7 @@ let loggedIn = false;
 
 app.set("view-engine", "ejs");
 
-// allows parsing of urlencoded payloads
+// Allows parsing of urlencoded payloads
 app.use(express.urlencoded({ extended: false }));
 app.use(
   session({
@@ -24,6 +27,7 @@ app.use(
   })
 );
 app.use(flash());
+app.use(cookieParser());
 
 app.get("/", (request, response) => {
   response.redirect("/home/index");
@@ -42,11 +46,18 @@ app.get("/account/login", checkNotAuthenticated, (request, response) => {
 });
 
 app.post("/account/login", async (request, response) => {
-  loggedIn = await verifyAccount(request);
-  // TODO: replace after dev
-  // loggedIn = verifyDummyAccount(request);
+  userObject = await verifyAccount(request);
 
-  if (loggedIn) {
+  if (userObject) {
+    // Create jwt token containing account information
+    const userToken = jwt.sign(userObject, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    // Attach cookie to response
+    response.cookie("userToken", userToken);
+    console.log("weehoo");
+
     response.redirect("/home/index");
   } else {
     response.redirect("/account/login");
@@ -128,7 +139,7 @@ function verifyDummyAccount(request) {
   return true;
 }
 
-// returns true if account credentials are valid; false otherwise
+// returns user information if account credentials are valid; false otherwise
 async function verifyAccount(request) {
   const username = request.body.username;
   const password = request.body.password;
@@ -154,12 +165,35 @@ async function verifyAccount(request) {
 
   // Asssumption 1: Any 200 message is valid, everything else invalid
   if (!response.ok) {
-    console.error("Error:", response.status, response.statusText);
+    console.error(
+      "Error login info not valid:",
+      response.status,
+      response.statusText
+    );
     request.flash("login-message", "Invalid username or password.");
     return false;
   } else {
+    // Will store parsed user information from response
+    let userObject;
+
+    try {
+      userObject = await response.json();
+    } catch (error) {
+      console.error(
+        "Error parsing user object:",
+        response.status,
+        response.statusText
+      );
+
+      request.flash(
+        "login-message",
+        "Server error occurred. Please contact the administrator"
+      );
+      return false;
+    }
+
     request.flash("login-message", "Account is verified.");
-    return true;
+    return userObject;
   }
 }
 
