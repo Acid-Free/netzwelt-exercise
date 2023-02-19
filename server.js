@@ -19,7 +19,8 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
-    cookie: { maxAge: 60000 },
+    // Note: Currently, I don't have to worry about non first-party context, so sameSite strict is fine
+    cookie: { sameSite: "strict", maxAge: 60000 },
   })
 );
 app.use(flash());
