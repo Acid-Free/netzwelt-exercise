@@ -14,6 +14,7 @@ const {
   checkNotAuthenticated,
 } = require("./middleware/authentication");
 const { verifyAccount } = require("./utils/accountVerification");
+const { getTerritories } = require("./utils/territories");
 
 const app = express();
 const port = 5500;
@@ -66,42 +67,6 @@ app.post("/account/login", async (request, response) => {
     response.redirect("/account/login");
   }
 });
-
-// Returns an object of territories
-async function getTerritories() {
-  // To be returned if API request is invalid
-  // This is important, other parts of this app rely on the object with this structure.
-  const emptyTerritoriesObject = { data: [] };
-
-  let response;
-  try {
-    response = await fetch(
-      "https://netzwelt-devtest.azurewebsites.net/Territories/All"
-    );
-  } catch (error) {
-    console.error(error);
-    return emptyTerritoriesObject;
-  }
-
-  // If invalid response, return empty object;
-  if (!response.ok) {
-    return emptyTerritoriesObject;
-  }
-  // If valid response, process it to return object of territories
-  else {
-    let territoriesObject;
-
-    // It's possible for the API to give incorrect format, so surround this too.
-    try {
-      territoriesObject = await response.json();
-    } catch (error) {
-      console.error(error);
-      return emptyTerritoriesObject;
-    }
-
-    return territoriesObject;
-  }
-}
 
 // Setup server to listen for connections using specified port
 app.listen(port, () => {
