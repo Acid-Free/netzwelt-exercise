@@ -16,8 +16,6 @@ const {
 const app = express();
 const port = 5500;
 
-let loggedIn = false;
-
 app.set("view-engine", "ejs");
 
 // Allows parsing of urlencoded payloads
