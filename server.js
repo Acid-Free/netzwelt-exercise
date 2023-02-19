@@ -39,8 +39,7 @@ app.get("/", (request, response) => {
 
 app.get("/home/index", checkAuthenticated, async (request, response) => {
   let { data } = await getTerritories();
-  // TODO: replace after dev
-  // let { data } = getDummyTerritories();
+
   response.render("index.ejs", { territories: data });
 });
 
