@@ -40,18 +40,32 @@ app.get("/", (request, response) => {
 });
 
 app.get("/home/index", checkAuthenticated, async (request, response) => {
+  // data is an object of list of territories
   let { data } = await getTerritories();
 
-  response.render("index.ejs", { territories: data });
+  // Get user information from received userToken cookie
+  const userToken = request.cookies.userToken;
+  let userInfo = { username: "User", displayName: "User" };
+  try {
+    const userObject = jwt.verify(userToken, process.env.JWT_SECRET);
+    // Assign info to userInfo
+    userInfo.username = userObject.username;
+    userInfo.displayName = userObject.displayName;
+  } catch (error) {
+    console.error(error);
+  }
+
+  response.render("index.ejs", { territories: data, userInfo });
 });
 
 app.get("/account/login", checkNotAuthenticated, (request, response) => {
   const message = request.flash("login-message");
+
   response.render("login.ejs", { message });
 });
 
 app.post("/account/login", async (request, response) => {
-  userObject = await verifyAccount(request);
+  const userObject = await verifyAccount(request);
 
   if (userObject) {
     // Create jwt token containing account information
