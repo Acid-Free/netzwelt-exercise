@@ -1,39 +1,32 @@
-<h1 align="center">Welcome to netzwelt-exercise 👋</h1>
-<p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/Acid-Free/netzwelt-exercise#readme" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
-  </a>
-  <a href="https://github.com/Acid-Free/netzwelt-exercise/graphs/commit-activity" target="_blank">
-    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
-  </a>
-  <a href="#" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/github/license/Acid-Free/netzwelt-exercise" />
-  </a>
-</p>
+# Netzwelt Take Home Exercise
 
-> Practical exercise to be presented during Netzwelt technical evaluation for Junior Web Programmer role.
+Practical exercise to be presented during Netzwelt technical evaluation for Junior Web Programmer role.
 
-### 🏠 [Homepage](https://github.com/Acid-Free/netzwelt-exercise#readme)
+## Live server link
 
-### ✨ [Demo](demohere)
+http://ec2-52-68-144-176.ap-northeast-1.compute.amazonaws.com:5500/
 
-## Install
+http://52.68.144.176:5500/
 
-```sh
-npm install
-```
+## Technologies
+
+- Node (version 18.xx.x) and Express (JS)
+- EJS
+- Amazon AWS (EC2)
+
+## Notable Branches
+
+- dev-express (only contains features defined in the exercise instructions)
+- dev-express-additional (contains features not explicitly defined)
+
+## How to Run Locally
+
+1. Install npm
+2. Install dependencies with `npm install`
+3. Create .env file in root directory with the following key-value pairs: `SESSION_SECRET=secretvalue` and `JWT_SECRET=secretvalue`
+4. Run with `npm run dev-start`
+5. Access http://localhost:5500
 
 ## Author
 
-👤 **Sian Caleb Domasig**
-
-* Github: [@Acid-Free](https://github.com/Acid-Free)
-* LinkedIn: [@https:\/\/www.linkedin.com\/in\/sian-caleb-domasig\/](https://linkedin.com/in/https:\/\/www.linkedin.com\/in\/sian-caleb-domasig\/)
-
-## Show your support
-
-Give a ⭐️ if this project helped you!
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+**Sian Caleb Domasig**
