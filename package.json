@@ -1,6 +1,6 @@
 {
   "name": "netzwelt-exercise",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Practical exercise to be presented during Netzwelt technical evaluation for Junior Web Programmer role.",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,8 @@
     "url": "git+https://github.com/Acid-Free/netzwelt-exercise.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Sian Caleb Domasig",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Acid-Free/netzwelt-exercise/issues"
   },
