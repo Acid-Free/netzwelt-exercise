@@ -8,7 +8,13 @@
   <title>Home Page</title>
   <style>
     body {
-      margin: 30px;
+      margin: 10px 30px;
+    }
+
+    .top-div {
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
 
     #root-ul,
@@ -61,6 +67,13 @@
 </head>
 
 <body>
+  <div class="top-div">
+    <p>Welcome <%= userInfo.displayName %> (<%= userInfo.username %>)</p>
+    <form action="/account/logout" method="post">
+      <button type="submit">Logout</button>
+    </form>
+  </div>
+
   <h2>Territories</h2>
   <% if (territories.length === 0) { %>
   <p>There are no territories</p>
