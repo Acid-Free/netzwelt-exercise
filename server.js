@@ -1,5 +1,6 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
+  console.log("Using .env file in dev");
 }
 
 const express = require("express");
@@ -66,7 +67,7 @@ app.post("/account/login", async (request, response) => {
   }
 });
 
-// returns an object of territories
+// Returns an object of territories
 async function getTerritories() {
   // To be returned if API request is invalid
   // This is important, other parts of this app rely on the object with this structure.
@@ -82,9 +83,12 @@ async function getTerritories() {
     return emptyTerritoriesObject;
   }
 
+  // If invalid response, return empty object;
   if (!response.ok) {
     return emptyTerritoriesObject;
-  } else {
+  }
+  // If valid response, process it to return object of territories
+  else {
     let territoriesObject;
 
     // It's possible for the API to give incorrect format, so surround this too.
@@ -99,10 +103,9 @@ async function getTerritories() {
   }
 }
 
-// returns user information if account credentials are valid; false otherwise
+// Returns user information if account credentials are valid; false otherwise
 async function verifyAccount(request) {
-  const username = request.body.username;
-  const password = request.body.password;
+  const { username, password } = request.body;
 
   let response;
   try {
@@ -132,7 +135,9 @@ async function verifyAccount(request) {
     );
     request.flash("login-message", "Invalid username or password.");
     return false;
-  } else {
+  }
+  // If valid response, parse it to obtain and return user object
+  else {
     // Will store parsed user information from response
     let userObject;
 
@@ -157,6 +162,7 @@ async function verifyAccount(request) {
   }
 }
 
+// Setup server to listen for connections using specified port
 app.listen(port, () => {
-  console.log("Listening...");
+  console.log(`Listening on port ${port}`);
 });
