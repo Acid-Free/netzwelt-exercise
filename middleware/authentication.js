@@ -16,11 +16,6 @@ exports.checkAuthenticated = (request, response, next) => {
     // If verify throws an error, userToken has different signature, remove it
     response.clearCookie("userToken");
 
-    request.flash(
-      "login-message",
-      "Invalid token. Please contact the administrator."
-    );
-
     return response.redirect("/account/login");
   }
 };

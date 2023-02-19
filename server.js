@@ -8,6 +8,11 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 
+const {
+  checkAuthenticated,
+  checkNotAuthenticated,
+} = require("./middleware/authentication");
+
 const app = express();
 const port = 5500;
 
@@ -56,7 +61,6 @@ app.post("/account/login", async (request, response) => {
 
     // Attach cookie to response
     response.cookie("userToken", userToken);
-    console.log("weehoo");
 
     response.redirect("/home/index");
   } else {
@@ -194,24 +198,6 @@ async function verifyAccount(request) {
 
     request.flash("login-message", "Account is verified.");
     return userObject;
-  }
-}
-
-// Checks if a user is logged in
-function checkAuthenticated(request, response, next) {
-  if (loggedIn) {
-    return next();
-  } else {
-    return response.redirect("/account/login");
-  }
-}
-
-// Checks if a user is not logged in
-function checkNotAuthenticated(request, response, next) {
-  if (!loggedIn) {
-    return next();
-  } else {
-    return response.redirect("/home/index");
   }
 }
 
