@@ -15,17 +15,32 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    label {
+      font-size: 0.8rem;
+    }
+
+    input {
+      padding: 5px;
+      margin-top: 2px;
+      border: 2px solid #eee;
+      border-radius: 10px;
+      box-shadow: rgba(0, 0, 0, 0.1) 0 0 8px 0.5px;
     }
 
     .form-div {
       margin-top: 20vh;
-      border: 2px solid;
+      border: 2px solid #ddd;
+      border-radius: 10px;
       padding: 20px;
     }
 
     form {
-      width: 25vh;
-      height: 20vh;
+      padding: 10px;
+      width: 300px;
+      height: 200px;
     }
 
     form,
@@ -36,8 +51,15 @@
 
     .p-button {
       align-self: flex-end;
-      width: 30%;
-      height: 50%;
+      width: 100px;
+      height: 30px;
+    }
+
+    .p-button > button {
+      font-size: 1rem;
+      height: 30px;
+      border-radius: 10px;
+      border: 2px solid #ddd;
     }
 
     .error-flash {
