@@ -8,19 +8,42 @@
   <title>Home Page</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
-    body {
-      margin: 10px 30px;
+    html, body {
+      margin: 0;
+      font-family:Arial, Helvetica, sans-serif;
     }
 
     .top-div {
+      padding: 5px 10px;
       display: flex;
-      gap: 10px;
+      gap: 20px;
       align-items: center;
+      justify-content: flex-end;
+      box-shadow: rgba(0, 0, 0, 0.3) 0px 7px 13px -3px;
+    }
+
+    .content-div {
+      margin: 10px 30px;
+    }
+
+    button {
+      font-size: 0.8rem;
+      height: 30px;
+      border-radius: 10px;
+      border: 2px solid #ddd;
+    }
+
+    .display-name {
+      font-weight: 800;
+    }
+
+    .user-name {
+      font-size: 0.8rem;
     }
 
     #root-ul,
     .visible-ul {
-      padding: 0;
+      padding: 5px;
     }
 
     ul {
@@ -69,19 +92,30 @@
 
 <body>
   <div class="top-div">
-    <p>Welcome <%= userInfo.displayName %> (<%= userInfo.username %>)</p>
+    <p>Welcome 
+      <span class="display-name">
+        <%= userInfo.displayName %>
+      </span> 
+      <span class="user-name">
+        (<%= userInfo.username %>)</p>
+      </span>
     <form action="/account/logout" method="post">
       <button type="submit">Logout</button>
     </form>
   </div>
 
-  <h2>Territories</h2>
-  <% if (territories.length === 0) { %>
-  <p>There are no territories</p>
-  <% } else { %>
-  <p>Here is the list of territories</p>
-  <%  } %>
-  <div id="territories-data" data-object="<%= JSON.stringify(territories) %>"></div>
+  <div class="content-div">
+    <h2>Territories</h2>
+    
+    <% if (territories.length === 0) { %>
+    <p>There are no territories</p>
+    <% } else { %>
+    <p>Here is the list of territories</p>
+    <%  } %>
+
+    <div id="territories-data" data-object="<%= JSON.stringify(territories) %>"></div>
+  </div>
+
   <script>
     // Assumption 1: sorted (not necessary though)
     // Assumption 2: every entry should be placed in the list
