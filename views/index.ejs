@@ -181,28 +181,17 @@
       return output.name;
     }
 
-    // Initialize dom element visualization
+    // Initialize territory tree dom element 
     function initializeElements() {
-      // Initialize togglers (span with caret class)
-      const toggler = [...document.querySelectorAll(".caret")];
-      toggler.forEach((element) =>
-        element.addEventListener("click", (e) => {
-          // using :scope > .nested ensures only the direct children get activated
-          [...e.target.parentElement.querySelectorAll(":scope > ul")].forEach(
-            (element) => element.classList.toggle("active")
-          );
-          e.target.classList.toggle("caret-down");
-        })
-      );
+      $(".caret").on("click", function(e) {
+        // In vanilla, I needed to specify :scope, it seems like this is not necessary in jQuery
+        $(this).parent().find("> ul").toggle();
+        $(this).toggleClass("caret-down");
+      })
 
-      // Initialize every ul
-      // Select the closest uls from root, make them always visible
-      const rootDirectChildrenUls = [...document.querySelectorAll("#root-ul > li > ul")];
-      rootDirectChildrenUls.forEach((element) => element.classList.add("visible-ul"));
-
-      // Select every child ul that is supposed to be hidden by default
-      const childUls = [...document.querySelectorAll("ul:not(#root-ul, .visible-ul)")];
-      childUls.forEach((element) => element.classList.add("nested"));
+      // Hide every ul except for the direct children of root
+      $("#root-ul ul").hide();
+      $("#root-ul > li > ul").show();
     }
 
     // This order is important, make sure to finalize the territoryTree before initializing the elements
