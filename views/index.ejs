@@ -88,7 +88,7 @@
     // Assumption 3: every entry has a parent in the list(except null)
 
     // Data send by backend 
-    const territoriesData = JSON.parse(document.querySelector("#territories-data").getAttribute("data-object"));
+    const territoriesData = JSON.parse($("#territories-data").attr("data-object"));
     // DOM element containing the territory tree to be appended to body
     const territoryTree = $("<div>");
     // object containing ids in a tree structure
