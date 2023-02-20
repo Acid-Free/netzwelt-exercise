@@ -87,6 +87,10 @@ app.post("/account/logout", (request, response) => {
   return response.redirect("/account/login");
 });
 
+app.get("*", (request, response) => {
+  response.send("Page doesn't exist", 404);
+});
+
 // Setup server to listen for connections using specified port
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
