@@ -88,7 +88,7 @@ app.post("/account/logout", (request, response) => {
 });
 
 app.get("*", (request, response) => {
-  response.send("Page doesn't exist", 404);
+  response.status(404).send("Page doesn't exist");
 });
 
 // Setup server to listen for connections using specified port
