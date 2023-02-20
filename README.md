@@ -11,7 +11,7 @@ http://52.68.144.176:5500/
 ## Technologies
 
 - Node (version 18.xx.x) and Express (JS)
-- EJS
+- EJS and jQuery
 - Amazon AWS (EC2)
 
 ## Notable Branches
