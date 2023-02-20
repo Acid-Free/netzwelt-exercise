@@ -90,7 +90,7 @@
     // Data send by backend 
     const territoriesData = JSON.parse(document.querySelector("#territories-data").getAttribute("data-object"));
     // DOM element containing the territory tree to be appended to body
-    const territoryTree = document.createElement("div");
+    const territoryTree = $("<div>");
     // object containing ids in a tree structure
     const tree = createObjectTree();
     // Used in populateElementTree to avoid adding nested class to first li
@@ -136,34 +136,33 @@
       }
     }
 
-    // Assumption 1: objectTree is not empty
+    // Create DOM elements from territory tree
     function populateElementTree(elementTree, objectTree) {
       ++depth;
-      // Assumption 2: There is only one object entry
+      // Assumption 1: There is only one object entry
       const [id, children] = Object.entries(objectTree)[0];
       const name = getIdName(id);
 
       // ul surrounds potential children
-      const ul = document.createElement("ul");
-      // if (depth > 1) ul.classList.add("nested");
+      const ul = $("<ul>");
 
       // Create li for surrounding potential span and ul
-      const li = document.createElement("li");
+      const li = $("<li>");
 
       // Don't name root element, but assign its ul an id
       if (depth === 0) {
-        ul.setAttribute("id", "root-ul");
+        ul.attr("id", "root-ul");
       }
       // Create span showing the title if there is at least one child
       else if (children.length > 0) {
-        const spanTitle = document.createElement("span");
-        spanTitle.textContent = name;
-        spanTitle.classList.add("caret");
+        const spanTitle = $("<span>");
+        spanTitle.text(name);
+        spanTitle.addClass("caret");
         li.append(spanTitle);
       }
       // Only add a text content if the current element doesn't have a child
       else {
-        li.textContent = name;
+        li.text(name);
       }
 
       ul.append(li);
@@ -177,7 +176,7 @@
 
     // Returns a valid name from territory id
     function getIdName(territoryId) {
-      if (territoryId === "null") return "Philippines";
+      if (territoryId === "null") return "null";
       output = territoriesData.find(({id}) => id === territoryId);
       return output.name;
     }
@@ -207,7 +206,7 @@
     }
 
     // This order is important, make sure to finalize the territoryTree before initializing the elements
-    document.body.append(territoryTree);
+    $("body").append(territoryTree);
 
     initializeElements();
   </script>
